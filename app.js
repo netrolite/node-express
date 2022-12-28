@@ -1,6 +1,5 @@
-const names = require("./names");
-require("./utils");
+const path = require("path");
 
-for (const name of Object.values(names)) {
-    console.log(name);
-}
+const absoluteFilePath = path.resolve(__dirname, "testFolder", "subFolder", "text.txt");
+
+console.log(absoluteFilePath);
