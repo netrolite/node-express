@@ -3,33 +3,32 @@ const path = require("path");
 
 const firstPath = "./testFolder/first.txt";
 const secondPath = "./testFolder/subFolder/second.txt";
-// this file stores all content from above files (it gets appended every time the program is run)
 const thirdPath = "./testFolder/third.txt";
 
-// files that store random numbers
-const storeNums = [firstPath, secondPath];
+let nums = "";
 
-function generateNums() {
-    let nums = "";
-    // generate 100 random numbers from 0 to 999;
-    for (let i = 0; i < 100000; i++) {
-        const num = Math.floor(Math.random() * (500 - 100 + 1) + 100);
-        nums += `${num} `
-    }
-    return nums;
+for (let i = 0; i < 10; i++) {
+    const randNum = Math.floor(Math.random() * (500 - 100 + 1) + 100);
+    nums += `${randNum} `;
 }
 
+console.log(nums);
 
-storeNums.forEach((path, i, arr) => {
-    fs.writeFileSync(path, generateNums());
+fs.writeFile(
+    firstPath,
+    nums, 
+    { flag: "a" },
+    (err) => {
+        if (err) throw err;
+    }
+)
+
+fs.readFile(firstPath, "utf-8", (err, data) => {
+    if (err) throw err;
+
+    let numsArr = data.split(" ");
+    numsArr.splice(numsArr.length - 1, 1);
+
+    console.log(numsArr);
+    console.log(numsArr.length);
 })
-
-
-// combined content from first and second files
-let combinedContent = "";
-storeNums.forEach(path => {
-    const content = fs.readFileSync(path, "utf-8");
-    combinedContent += content;
-});
-
-fs.writeFileSync(thirdPath, combinedContent);
