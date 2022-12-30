@@ -1,18 +1,32 @@
-const fs = require("fs");
+const http = require("http");
+const port = 5000;
 
-const filePath = "./testFolder/first.txt";
-
-console.log("first");
-
-// fs.readFile is async
-fs.readFile(filePath, "utf-8", (err, data) => {
-    if (err) {
-        console.error(err);
-        return;
+const server = http.createServer((req, res) => {
+    if (req.url === "/") {
+        res.end("<a href=\"/about\">About page</a>");
     }
+    else if (req.url === "/about") {
+        
+        // making the loop asynchronous by putting it inside a setTimeout with a 0ms delay
+        setTimeout(() => {
+            console.log("loop began");
 
-    console.log(data);
-    console.log("second");
+            let x = 0;
+            while (x < 1e9) {
+                x += 1;
+            }
+
+            console.log("loop done");
+        }, 0);
+
+        console.log("redirect");
+        res.end("About page");
+    }
+    else {
+        res.end("Not found");
+    }
 })
 
-console.log("third");
+server.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+})
