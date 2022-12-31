@@ -1,16 +1,23 @@
-const EventEmitter = require("events");
+const http = require("http");
+const fs = require("fs");
+const port = 5000;
 
-const emitter = new EventEmitter();
+// using readStream to send data in chunks instead of 1 huge file
+const server = http.createServer((req, res) => {
+    const filename = "./file.txt";
 
-emitter.on("log some data", (data) => {
-    console.log(data);
-});
+    // open file as a readable stream
+    const readStream = fs.createReadStream(filename, "utf-8");
 
-emitter.emit(
-    "log some data",
-    {
-        name: "John",
-        age: 155,
-        yearBorn: 2007
-    }
-);
+    // wait until the stream is actually valid before piping
+    readStream.on("open", () => {
+        // pipe the response (res) object to the client
+        readStream.pipe(res);
+    })
+
+    readStream.on("error", (err) => {
+        res.end(err);
+    })
+})
+
+server.listen(port);

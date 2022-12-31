@@ -16,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/matvey733/node-express/issues"
   },
-  "homepage": "https://github.com/matvey733/node-express#readme",
-  "dependencies": {
-    "bootstrap": "^5.2.3"
-  }
+  "homepage": "https://github.com/matvey733/node-express#readme"
 }
