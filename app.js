@@ -2,61 +2,111 @@ const express = require("express");
 const app = express();
 const { products, people } = require("./data");
 
-
 app.get("/", (req, res) => {
     res.send('<h1>Home Page</h1><div><a href="/api/products">Products</a></div>')
 })
 
 
 app.get("/api/products/search", (req, res) => {
-    const { productName, limit } = req.query;
+    // remove "desc" (description) property from all products
+    const productsNoDesc = products.map(product => {
+        const { id, name, image, price } = product;
+        return { id, name, image, price };
+    })
 
-    if (productName) {
-        let filteredProducts = products.filter(product => {
-            const productNameLower = product.name.toLowerCase();
-            const productNameQueryLower = productName.toLowerCase();
+    // always send 200 status
+    res.status(200);
+    // always send json
+    res.header("Content-Type", "application/json");
+    
+    // product name and product limit (limits how many are sent back)
+    const { name, limit } = req.query;
 
-            // if name of product from array starts with product name from query
-            return productNameLower.startsWith(productNameQueryLower);
-        })
+    // response to send
+    // response.data may change
+    let response = {
+        ok: true,
+        data: productsNoDesc
+    }
 
+    // if name or limit are present in the query
+    if (name || limit) {
+        let filteredProducts = productsNoDesc;
+
+        // filter out products whose name doesn't start with "name" from query
+        if (name) {
+            filteredProducts = filteredProducts.filter(product => {
+                const nameLower = product.name.toLowerCase();
+                const nameQueryLower = name.toLowerCase();
+                
+                // if name of product from array starts with product name from query
+                return nameLower.startsWith(nameQueryLower);
+            })
+        }
+        
+        // limit products array if "limit" is present in the query
         if (limit) {
             filteredProducts = filteredProducts.slice(0, parseInt(limit));
         }
 
-        res.status(200);
-        res.json(filteredProducts);
+        // update response.data
+        response.data = filteredProducts;
+
+        res.send(JSON.stringify(response, null, 2));
     }
     else {
-        res.status(400);
-        res.send("Bad Request 400");
+        res.send(JSON.stringify(response, null, 2));
     }
 })
 
 
 app.get("/api/products/:productID", (req, res) => {
+    // always send json
+    res.header("Content-Type", "application/json");
     const product = products.find(product => (
         product.id === parseInt(req.params.productID)
     ))
+        
 
-    if (product) res.json(product);
+    if (product) {
+        res.status(200);
+        res.send(JSON.stringify(
+            {
+                ok: true,
+                data: product
+            },
+            null,
+            2
+        ))
+    }
     else {
         res.status(404);
-        let binary = "";
-        for (let i = 0; i < 1936; i++) {
-            binary += Math.floor(Math.random() * 2);
-        }
-        res.send(`<div style="word-break: break-all">${binary}</div>`);
+        res.send(JSON.stringify(
+            {
+                ok: false,
+            },
+            null,
+            2
+        ))
     }
 });
 
 
 app.get("/api/products", (req, res) => {
+    // remove "desc" (description) property from all products
     const productsNoDesc = products.map(product => {
         const { id, name, image, price } = product;
         return { id, name, image, price };
     })
-    res.json(productsNoDesc);
+
+    const response = {
+        ok: true,
+        data: productsNoDesc
+    }
+
+    res.status(200);
+    res.header("Content-Type", "application/json");
+    res.send(JSON.stringify(response, null, 2));
 })
 
 app.listen(5000, () => {
