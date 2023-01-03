@@ -1,26 +1,13 @@
 const express = require("express");
-const morgan = require("morgan");
 const app = express();
-const logInfo = require("./logInfo")
+let { people } = require("./data");
 
-app.use("/api/products", logInfo);
+app.use(express.static("./methods-public"));
 
-app.get("/", (req, res) => {
-    res.send("This is the home page");
-})
-
-app.get("/about", (req, res) => {
-    res.send("This is the about page");
-})
-
-app.get("/api/products", (req, res) => {
+app.get("/api/people", (req, res) => {
     res.status(200);
-    res.send("authorized");
-})
-
-
-app.get("/api/items", (req, res) => {
-    res.send("Items");
+    res.header("Content-Type", "application/json");
+    res.send(JSON.stringify({ ok: true, data: people }, null, 2))
 })
 
 app.listen(5000);

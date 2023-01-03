@@ -20,12 +20,20 @@
     </nav>
     <main>
       <form action="/login" method="POST">
-        <h3>Traditional Form</h3>
         <div class="form-row">
-          <label for="name"> enter name </label>
-          <input type="text" name="name" id="name" autocomplete="false" />
+          <label for="first-name">First Name</label>
+          <input type="text" id="first-name" name="fName">
         </div>
-        <button type="submit" class="block">submit</button>
+        <div class="form-row">
+          <label for="last-name">Last Name</label>
+          <input type="text" id="last-name" name="lName">
+        </div>
+        <div class="form-row">
+          <label for="phone-number">Phone Number</label>
+          <input type="tel" id="phone-number" name="phoneNumber">
+        </div>
+
+        <button>Submit</button>
       </form>
     </main>
   </body>
