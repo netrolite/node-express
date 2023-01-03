@@ -38,5 +38,14 @@ app.post("/login", (req, res) => {
     }
 })
 
+// res.set allows to set multiple headers at once
+// res.setHeader allows to only set 1 header at a time
+app.use(express.json());
+app.post("/api/people", (req, res) => {
+    res.status(201);
+    res.send("Created");
+    console.log(req.body);
+})
+
 
 app.listen(5000);
