@@ -1,17 +1,28 @@
-// using an arrow function as an object method returns "undefined" instead of "hello" because (apparently) they have no access to "this" keyword
+const express = require("express");
+const app = express();
+const middleware = require("./middleware");
 
-const obj = {
-    x: "hello",
-    getX: function () {
-        return this.x
-    }
-}
+app.use("/api", middleware);
+app.use((req, res, next) => {
+    console.log(req.url);
+    next();
+});
 
-const unbound = obj.getX;
-const bound = unbound.bind(obj);
+app.get("/", (req, res) => {
+    res.send("This is the home page");
+})
 
-// returns "hello"
-console.log(bound());
+app.get("/about", (req, res) => {
+    res.send("This is the about page");
+})
 
-// returns "undefined"
-console.log(unbound())
+app.get("/api/products", (req, res) => {
+    res.send("Products");
+})
+
+
+app.get("/api/items", (req, res) => {
+    res.send("Items");
+})
+
+app.listen(5000);
