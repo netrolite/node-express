@@ -14,11 +14,25 @@ app.use(express.urlencoded({ extended: false }));
 app.post("/login", (req, res) => {
     const { name } = req.body;
 
+    // if name is provided
     if (name) {
-        res.status(200);
-        res.send(`Welcome, ${name}`)
+        const person = people.find(person => person.name === name);
+        // if name is provided and registered
+        if (person) {
+            console.log(person);
+            res.status(200);
+            res.send(`Welcome, ${name}`)
+        }
+        else {
+            // if name is provided, but not registered
+            // HTTP code forbidden
+            res.status(403);
+            res.send("Name not registered");
+        }
     }
+    // if name is not provided
     else {
+        // HTTP code unauthorized (lacks required credentials)
         res.status(401);
         res.send("Please provide a name");
     }
