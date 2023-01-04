@@ -74,5 +74,20 @@ app.put("/api/people/:id", (req, res) => {
     return res.json({ data: { "person": person, "updatedPerson": updatedPerson } });
 })
 
+app.delete("/api/people/:id", (req, res) => {
+    const id = Number(req.params.id);
+
+    const filtered = people.filter(person => person.id !== id);
+
+    // always returns false if values aren't converted to JSON because they have different references
+    // if arrays are the same
+    if (JSON.stringify(filtered) === JSON.stringify(people)) {
+        res.status(400);
+        return res.json({ "error": "No person with such id" });
+    }
+    res.status(200);
+    res.json(filtered);
+})
+
 
 app.listen(5000);
