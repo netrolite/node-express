@@ -12,8 +12,8 @@ app.get("/api/people", (req, res) => {
 })
 
 app.get("/api/people/:id", (req, res) => {
-    const id = parseInt(req.params.id)
-    const person = people.find(person => person.id === id);
+    const { id } = req.params;
+    const person = people.find(person => person.id === Number(id));
 
     if (!person) {
         res.status(404);
@@ -50,14 +50,21 @@ app.post("/api/people", (req, res) => {
 
 
 app.put("/api/people/:id", (req, res) => {
-    const id = parseInt(req.params.id);
-    const name = req.body.name;
-    console.log(id, name);
+    const { id } = req.params;
+    const { name } = req.body;
 
-    const person = people.find(person => person.id === id);
+    const person = people.find(person => person.id === Number(id));
     if (!person) {
         res.status(404);
         return res.json({ error: "No such person" });
+    }
+    if (!name) {
+        res.status(400);
+        return res.json({ error: "Please provide a name" })
+    }
+    if (name.toLowerCase() === "vladimir putin") {
+        res.status(403);
+        return res.json({ error: "putin not allowed" });
     }
     // making a deep copy
     const updatedPerson = JSON.parse(JSON.stringify(person));
