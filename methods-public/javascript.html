@@ -38,43 +38,52 @@
         <div class="result"></div>
       </section>
     </main>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
-      integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
-      crossorigin="anonymous"
-    ></script>
     <script>
-      const result = document.querySelector('.result')
-
-      const fetchPeople = async () => {
+      const result = document.querySelector(".result");
+      const submitBtn = document.querySelector(".submit-btn");
+      const input = document.querySelector(".form-input");
+      async function fetchData() {
         try {
-          const { data } = await axios.get('/api/people')
-          const people = data.data.map((person) => {
-            return `<h5>${person.name}</h5>`
-          })
-          result.innerHTML = people.join('')
-        } catch (error) {
-          result.innerHTML = `<div class="alert alert-danger">Can't Fetch Data</div>`
+          const response = await fetch("/api/people");
+          const { data } = await response.json();
+
+          if (data) {
+            data.forEach(item => {
+              const elem = document.createElement("h5");
+              elem.innerHTML = item.name;
+              result.appendChild(elem);
+            })
+          }
+          else {
+            result.textContent = "There seems to be an error..."
+          }
+        } catch (err) {
+          console.error(err);
         }
       }
-      fetchPeople()
-      // submit form
-      const btn = document.querySelector('.submit-btn')
-      const input = document.querySelector('.form-input')
-      const formAlert = document.querySelector('.form-alert')
-      btn.addEventListener('click', async (e) => {
-        e.preventDefault()
-        const nameValue = input.value
+      fetchData();
 
-        try {
-          const { data } = await axios.post('/api/people', { name: nameValue })
-          const h5 = document.createElement('h5')
-          h5.textContent = data.person
-          result.appendChild(h5)
-        } catch (error) {
-          formAlert.textContent = error.response.data.msg
+      submitBtn.addEventListener("click", async e => {
+        e.preventDefault();
+
+        const inputVal = input.value;
+        if (!inputVal) {
+          return result.textContent = "Please provide a name";
         }
-        input.value = ''
+
+        const response = await fetch(
+          "/api/people",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: inputVal })
+          }
+        )
+
+        const { data } = await response.json();
+        const node = document.createElement("h5");
+        node.textContent = data;
+        result.appendChild(node);
       })
     </script>
   </body>
