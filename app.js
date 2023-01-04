@@ -10,33 +10,39 @@ app.get("/api/people", (req, res) => {
 })
 
 
-app.use("/login", express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.post("/login", (req, res) => {
-    res.set({ "Content-Type": "text/plain" });
-    const user = people.find(person => person.name === req.body.name);
+    const { name } = req.body;
+    console.log(req.body);
+    if (!name) {
+        res.status(400);
+        return res.json({ error: "Name not provided" });
+    }
 
-    if (user) {
-        res.status(200);
-        res.send(`Welcome, ${user.name}`);
-    }
-    else {
-        res.status(403);
-        res.send("Name not registered");
-    }
+    res.status(201);
+    return res.json({ username: name, id: Math.floor(Math.random() * 100000) })
 })
 
 
-app.use("/api/people", express.json());
+app.use(express.json());
 app.post("/api/people", (req, res) => {
     console.log("post /api/people");
     const { name } = req.body;
     
     if (!name) {
         res.status(400);
-        return res.json({ data: "Please provide a name" });
+        return res.json({ error: "Name not provided" });
     }
     res.status(201);
     return res.json({ data: name })
+})
+
+app.get("/api/people/:personID", (req, res) => {
+    const id = parseInt(req.params.personID)
+    const person = people.find(person => person.id === id);
+
+    if (!person) return res.status(404).json({ error: "No person with such ID" });
+    return res.status(200).json(person);
 })
 
 

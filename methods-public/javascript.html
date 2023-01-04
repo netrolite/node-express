@@ -67,23 +67,28 @@
         e.preventDefault();
 
         const inputVal = input.value;
-        if (!inputVal) {
-          return result.textContent = "Please provide a name";
-        }
 
-        const response = await fetch(
-          "/api/people",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: inputVal })
+        try {
+          const response = await fetch(
+            "/api/people",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name: inputVal })
+            }
+          )
+
+          if (response.status !== 201) {
+            return;
           }
-        )
 
-        const { data } = await response.json();
-        const node = document.createElement("h5");
-        node.textContent = data;
-        result.appendChild(node);
+          const { data } = await response.json();
+          const node = document.createElement("h5");
+          node.textContent = data;
+          result.appendChild(node);
+        } catch (err) {
+          console.error(err);
+        }
       })
     </script>
   </body>
