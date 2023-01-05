@@ -23,11 +23,13 @@ app.use("/login", authRoute);
 // localhost:5000/users?admin=true
 
 app.get("/users", auth, (req, res) => {
+    console.log("GET /users");
     res.status(200);
     res.json(people);
 });
 
 function auth(req, res, next) {
+    console.log("auth start");
     const bodyLen = Object.keys(req.body).length;
     const { admin } = bodyLen ? req.body : req.query;
     let isAdmin;
@@ -40,7 +42,12 @@ function auth(req, res, next) {
         isAdmin = admin;
     }
 
-    if (isAdmin) return next();
+    if (isAdmin) {
+        console.log("before next");
+        next();
+        console.log("after next");
+        return;
+    } 
     res.status(401);
     res.send("Only admins can access this page");
 };
