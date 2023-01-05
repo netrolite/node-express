@@ -16,6 +16,11 @@ app.use(express.json());
 app.use("/api/people", peopleRoute);
 app.use("/login", authRoute);
 
+// path parameter
+// localhost:5000/users/:userId
+
+// query parameter
+// localhost:5000/users?admin=true
 
 app.get("/users", auth, (req, res) => {
     res.status(200);
@@ -23,13 +28,17 @@ app.get("/users", auth, (req, res) => {
 });
 
 function auth(req, res, next) {
-    const { admin } = req.body;
+    const bodyLen = Object.keys(req.body).length;
+    const { admin } = bodyLen ? req.body : req.query;
     let isAdmin;
 
+    // only accept strings and booleans
     if (typeof admin === "string") {
         isAdmin = admin.toLowerCase() === "true";
     }
-    else isAdmin = admin;
+    else if (typeof admin === "boolean") {
+        isAdmin = admin;
+    }
 
     if (isAdmin) return next();
     res.status(401);
