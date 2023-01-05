@@ -22,7 +22,7 @@ app.use("/login", authRoute);
 // query parameter
 // localhost:5000/users?admin=true
 
-app.get("/users", auth, (req, res) => {
+app.get("/users", logger, auth, (req, res) => {
     console.log("GET /users");
     res.status(200);
     res.json(people);
@@ -51,6 +51,12 @@ function auth(req, res, next) {
     res.status(401);
     res.send("Only admins can access this page");
 };
+
+function logger(req, res, next) {
+    console.log("logger start");
+    next();
+    console.log("logger end");
+}
 
 
 app.listen(port, (err) => {
