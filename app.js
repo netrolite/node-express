@@ -22,41 +22,11 @@ app.use("/login", authRoute);
 // query parameter
 // localhost:5000/users?admin=true
 
-app.get("/users", logger, auth, (req, res) => {
+app.get("/users", (req, res) => {
     console.log("GET /users");
     res.status(200);
     res.json(people);
 });
-
-function auth(req, res, next) {
-    console.log("auth start");
-    const bodyLen = Object.keys(req.body).length;
-    const { admin } = bodyLen ? req.body : req.query;
-    let isAdmin;
-
-    // only accept strings and booleans
-    if (typeof admin === "string") {
-        isAdmin = admin.toLowerCase() === "true";
-    }
-    else if (typeof admin === "boolean") {
-        isAdmin = admin;
-    }
-
-    if (isAdmin) {
-        console.log("before next");
-        next();
-        console.log("after next");
-        return;
-    } 
-    res.status(401);
-    res.send("Only admins can access this page");
-};
-
-function logger(req, res, next) {
-    console.log("logger start");
-    next();
-    console.log("logger end");
-}
 
 
 app.listen(port, (err) => {
