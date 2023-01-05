@@ -34,7 +34,7 @@ function auth(req, res, next) {
     if (isAdmin) return next();
     res.status(401);
     res.send("Only admins can access this page");
-}
+};
 
 
 app.listen(port, (err) => {
