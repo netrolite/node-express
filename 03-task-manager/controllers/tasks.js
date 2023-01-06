@@ -1,10 +1,12 @@
+const Task = require("../models/task");
+
 function getAllTasks(req, res) {
     res.send("List of all tasks");
 }
 
 
 function getTask(req, res) {
-    res.send("Task");
+    res.json({ id: req.params.taskId  });
 }
 
 
