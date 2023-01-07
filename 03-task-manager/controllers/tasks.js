@@ -16,7 +16,7 @@ async function postTask(req, res) {
     } catch (err) {
         console.log(err);
         res.status(500);
-        res.json({ error: "server error" });
+        res.json({ msg: err });
     }
 }
 
