@@ -1,11 +1,16 @@
 const mongoose = require("mongoose");
 
-// setup document structure
 const TaskSchema = new mongoose.Schema({
-    name: String,
-    completed: Boolean
+    name: {
+        type: String,
+        default: "",
+        required: true
+    },
+    done: {
+        type: Boolean,
+        default: false
+    }
 })
 
-// "Task" in code
-// "tasks" in the db
+// model === collection
 module.exports = mongoose.model("Task", TaskSchema);

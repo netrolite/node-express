@@ -1,34 +1,37 @@
-const Task = require("../models/task");
+const Task = require("../models/Task");
 
-function getAllTasks(req, res) {
-    res.send("List of all tasks");
+function getTasks(req, res) {
+    res.send("All tasks");    
 }
-
 
 function getTask(req, res) {
-    res.json({ id: req.params.taskId  });
+    res.send("One task");    
 }
 
-
-function createTask(req, res) {
-    res.send("Created new task");
+async function postTask(req, res) {
+    try {
+        const task = await Task.create(req.body);
+        res.status(201);
+        res.json({ task });
+    } catch (err) {
+        console.log(err);
+        res.status(500);
+        res.json({ error: "server error" });
+    }
 }
 
-
-function updateTask(req, res) {
-    res.send("Update task");
+function patchTask(req, res) {
+    res.send("Patched a task");    
 }
-
 
 function deleteTask(req, res) {
-    res.send("Delete task");
+    res.send("Deleted a task");
 }
 
-
 module.exports = {
-    getAllTasks,
-    createTask,
+    getTasks,
     getTask,
-    updateTask,
+    postTask,
+    patchTask,
     deleteTask
 }
