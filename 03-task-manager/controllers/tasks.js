@@ -53,8 +53,24 @@ async function postTask(req, res) {
 }
 
 
-function patchTask(req, res) {
-    res.send("Patched a task");    
+async function patchTask(req, res) {
+    try {
+        const { taskId } = req.params;
+    
+        // findOneAndUpdate(condition, newData, [options])
+        const task = await Task.findOneAndUpdate(
+            { _id: taskId },
+            req.body,
+            { runValidators: true, new: true }
+        )
+        console.log("patchTask");
+    
+        if (!task) return res.status(404).json({ msg: `No task with id ${taskId}`});
+    
+        res.status(200).json(task);
+    } catch (err) {
+        handleError(err, res);
+    }
 }
 
 
@@ -76,14 +92,13 @@ async function deleteAllTasks(req, res) {
     try {
         const allTasks = await Task.find({});
         const allIds = allTasks.map(task => task._id);
-        const task = await Task.findOneAndDelete({ _id: allIds[0] });
 
         // using Promise.all() because allIds.map() returns an array
         const deleted = await Promise.all(allIds.map(async id => {
             return await Task.findOneAndDelete({ _id: id });
         }))
 
-        res.status(200).json({ deleted, task });
+        res.status(200).json({ deleted });
     } catch (err) {
         handleError(err, res);
     }
