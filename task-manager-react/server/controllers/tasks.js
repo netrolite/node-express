@@ -2,8 +2,10 @@ const Task = require("../models/Task");
 
 async function getAllTasks(req, res) {
     try {
+
         const tasks = await Task.find({});
         res.status(200).json(tasks);
+
     } catch (err) {
         handleErr(err, res);
     }
@@ -11,10 +13,11 @@ async function getAllTasks(req, res) {
 
 async function postTask(req, res) {
     try {
+
         const data = req.body;
-        console.log(data);
-        const task = await Task.create(data)
+        const task = await Task.create(data);
         res.status(201).json(task);
+
     } catch (err) {
         handleErr(err, res);
     }
@@ -22,16 +25,17 @@ async function postTask(req, res) {
 
 async function getTask(req, res) {
     try {
+
         const { taskID } = req.params;
         const task = await Task.findOne({ _id: taskID });
 
         if (!task) {
-            res.status(404);
-            return res.json({ "msg": `No task with id ${taskID}`});
+            return res.status(404).json(null);
         }
 
         res.status(200);
         res.json(task);
+
     } catch (err) {
         handleErr(err, res);
     }
@@ -39,8 +43,8 @@ async function getTask(req, res) {
 
 async function patchTask(req, res) {
     try {
-        const { taskID } = req.params;
 
+        const { taskID } = req.params;
         const task = await Task.findOneAndUpdate(
             { _id: taskID },
             req.body,
@@ -48,13 +52,12 @@ async function patchTask(req, res) {
         )
 
         if (!task) {
-            res.status(404);
-            return res.json({ "msg": `No task with id ${taskID}`});
+            return res.status(404).json(null);
         }
 
-        // "no content" status code
         res.status(200);
         res.json(task);
+
     } catch (err) {
         handleErr(err, res);
     }
@@ -62,17 +65,17 @@ async function patchTask(req, res) {
 
 async function deleteTask(req, res) {
     try {
-        const { taskID } = req.params;
-        console.log(taskID);
 
+        const { taskID } = req.params;
         const task = await Task.findOneAndDelete({ _id: taskID });
 
         if (!task) {
-            return req.status(404).json(task);
+            return res.status(404).json(null);
         }
 
         res.status(200);
         res.json(task);
+        
     } catch (err) {
         handleErr(err, res);    
     }
