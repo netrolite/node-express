@@ -1,5 +1,6 @@
 const Task = require("../models/Task");
 
+
 async function getAllTasks(req, res) {
     try {
 
@@ -10,6 +11,7 @@ async function getAllTasks(req, res) {
         handleErr(err, res);
     }
 }
+
 
 async function postTask(req, res) {
     try {
@@ -22,6 +24,7 @@ async function postTask(req, res) {
         handleErr(err, res);
     }
 }
+
 
 async function getTask(req, res) {
     try {
@@ -41,10 +44,13 @@ async function getTask(req, res) {
     }
 }
 
+
 async function patchTask(req, res) {
     try {
-
+        console.log("patch task");
         const { taskID } = req.params;
+        console.log(taskID);
+        console.log(req.body);
         const task = await Task.findOneAndUpdate(
             { _id: taskID },
             req.body,
@@ -63,6 +69,7 @@ async function patchTask(req, res) {
     }
 }
 
+
 async function deleteTask(req, res) {
     try {
 
@@ -75,7 +82,7 @@ async function deleteTask(req, res) {
 
         res.status(200);
         res.json(task);
-        
+
     } catch (err) {
         handleErr(err, res);    
     }
@@ -87,6 +94,7 @@ function handleErr(err, res) {
     res.status(500);
     res.json({ err });
 }
+
 
 module.exports = {
     getAllTasks,
