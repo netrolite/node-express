@@ -1,13 +1,22 @@
 const express = require("express");
 const app = express();
 const port = 3000;
+const dotenv = require("dotenv").config();
+const connectDB = require("./db/connect");
+const tasksRoute = require("./routes/tasks");
 
-app.get("/api", (req, res) => {
-    console.log("hello");
-    res.status(200).json({ data: ["hello", "world"]})
-})
+// middleware
+app.use(express.json());
 
-app.listen(port, (err) => {
-    if (err) return console.log(err);
-    console.log(`Server listening on port ${port}`);
-});
+// routes
+app.use("/api/v1/tasks", tasksRoute);
+
+
+(async () => {
+    try {
+        await connectDB(process.env.MONGODB_URI);
+        app.listen(port, console.log(`Database connected. Server listening on port ${port}`));
+    } catch (err) {
+        console.error(err);
+    }
+})();

@@ -1,26 +1,22 @@
 import { useState, useEffect } from "react";
 
 function App() {
-  const [apiData, setApiData] = useState(null);
+	const [tasks, setTasks] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("/api");
-      const data = JSON.stringify(await response.json());
-      console.log(data);
+	useEffect(() => {
+		(async () => {
+			
+		})();
+	})
 
-      setApiData(data);
-    })();
-  })
+	return (
+		<div className="app">
+			<h1>Task manager app</h1>
+			<div className="data">
 
-  return (
-    <>
-      <h1>This is my frontend</h1>
-      <div className="data">
-        {apiData}
-      </div>
-    </>
-  );
+			</div>
+		</div>
+	);
 }
 
 export default App;
