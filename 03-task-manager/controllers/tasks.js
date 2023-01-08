@@ -17,59 +17,39 @@ const Task = require("../models/Task");
 // Model.updateOne()
 
 
-async function getTasks(req, res) {
+async function getAllTasks(req, res) {
     try {
-        // find all tasks
         const tasks = await Task.find({});
         res.status(200).json(tasks);
     } catch (err) {
-        handleError(err);   
+        handleError(err, res);
     }
 }
 
 
-async function getTask(req, res) {
-    const done = req.params.id;
-    if (!isNaN(done)) {
-        console.log(`${done} is a number`);
-    }
+async function getTaskById(req, res) {
+    try {
+        const { taskId } = req.params;
 
-    const person = {
-        oldness: 9,
-        tallness: 180,
-        thickness: 100,
-        address: {
-            street: "Main St",
-            houseNumber: 44,
-            tenants: {
-                amount: 10,
-                loud: true
-            }
+        const task = await Task.findOne({ _id: taskId });
+        
+        if (!task) {
+            return res.status(404).json({ msg: `No task with id ${taskId}`});
         }
+        res.status(200).json(task);
+    } catch (err) {
+        handleError(err, res);
     }
-
-    const { address: { tenants: { amount: number }}} = person;
-    console.log(number);
-    
-    
-
-    res.json("response");
-    // try {
-    //     // find task with the provided name
-    //     const task = await Task.findOne({ done: done });
-    //     res.status(200).json(task);
-    // } catch (err) {
-    //     handleError(err);
-    // }
 }
 
 
 async function postTask(req, res) {
     try {
-        // create 1 new task from data in body
         const task = await Task.create(req.body);
-        res.status(201).json({ task });
-    } catch (err) { handleError(err); }
+        res.status(201).json(task);
+    } catch (err) {
+        handleError(err, res);
+    }
 }
 
 
@@ -78,20 +58,48 @@ function patchTask(req, res) {
 }
 
 
-function deleteTask(req, res) {
-    res.send("Deleted a task");
+async function deleteTask(req, res) {
+    try {
+        const { taskId } = req.params;
+        const task = await Task.findOneAndDelete({ _id: taskId });
+        
+        if (!task) {
+            return res.status(404).json(task);
+        }
+        res.status(200).json(task);
+    } catch (err) {
+        handleError(err, res);
+    }
 }
 
+async function deleteAllTasks(req, res) {
+    try {
+        const allTasks = await Task.find({});
+        const allIds = allTasks.map(task => task._id);
+        const task = await Task.findOneAndDelete({ _id: allIds[0] });
+
+        // using Promise.all() because allIds.map() returns an array
+        const deleted = await Promise.all(allIds.map(async id => {
+            return await Task.findOneAndDelete({ _id: id });
+        }))
+
+        res.status(200).json({ deleted, task });
+    } catch (err) {
+        handleError(err, res);
+    }
+}
 
 function handleError(err, res) {
     res.status(500);
+    console.log(err);
     res.json({ err });
 }
 
 module.exports = {
-    getTasks,
-    getTask,
+    getAllTasks,
+    getTaskById,
     postTask,
     patchTask,
-    deleteTask
+    deleteTask,
+    deleteAllTasks
 }

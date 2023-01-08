@@ -8,6 +8,7 @@ const dotenv = require("dotenv").config();
 
 // middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 
 // routes
