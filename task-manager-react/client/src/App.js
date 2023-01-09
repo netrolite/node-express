@@ -24,8 +24,6 @@ function App() {
 		})();
 	}, []);
 
-	console.log(tasks);
-
 
 	const tasksNodes = tasks.map((task, i) => {
 		return (

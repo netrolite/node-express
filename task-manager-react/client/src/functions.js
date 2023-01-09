@@ -7,6 +7,7 @@ function addTask(newTaskRef, tasks, setTasks) {
 
             const taskName = newTaskRef.current.value;
             newTaskRef.current.value = "";
+
             if (!taskName.trim()) throw new Error("Name can't be emtpy!");
 
             const response = await axios.post("/api/v1/tasks", {
@@ -15,7 +16,6 @@ function addTask(newTaskRef, tasks, setTasks) {
             const task = response.data;
 
             setTasks(prev => {
-                console.log(prev);
                 return [
                     ...prev,
                     task
@@ -30,17 +30,16 @@ function addTask(newTaskRef, tasks, setTasks) {
 }
 
 
-function changeChecked(setTasks, setChecked, checked, id) {
+function changeChecked(setTasks, currDone, id) {
     (async () => {
         try {
 
             
             // reversing "checked" because "setChecked" (right above) doesn't update it at this point in code
-            const task = await axios.patch(
+            await axios.patch(
                 `/api/v1/tasks/${id}`,
-                { done: !checked }
+                { done: !currDone }
             );
-            setChecked(task.data.done);
 
             const allTasks = await axios.get("/api/v1/tasks");
             setTasks(allTasks.data);
@@ -57,6 +56,7 @@ function deleteTask(setTasks, id, setTaskActionsOpenID) {
         try {
             await axios.delete(`/api/v1/tasks/${id}`);
             const allTasks = await axios.get("/api/v1/tasks");
+
             setTasks(allTasks.data);
             setTaskActionsOpenID(null);
         } catch (err) {
