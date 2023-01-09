@@ -47,10 +47,9 @@ async function getTask(req, res) {
 
 async function patchTask(req, res) {
     try {
+
         console.log("patch task");
         const { taskID } = req.params;
-        console.log(taskID);
-        console.log(req.body);
         const task = await Task.findOneAndUpdate(
             { _id: taskID },
             req.body,
@@ -73,6 +72,7 @@ async function patchTask(req, res) {
 async function deleteTask(req, res) {
     try {
 
+        console.log("delete task");
         const { taskID } = req.params;
         const task = await Task.findOneAndDelete({ _id: taskID });
 
