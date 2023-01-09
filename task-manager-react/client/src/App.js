@@ -49,7 +49,7 @@ function App() {
 				<button
 					type="button"
 					className="w-50 rounded"
-					onClick={() => addTask(newTaskRef, tasks, setTasks)}
+					onClick={() => addTask(newTaskRef, setTasks)}
 				>
 					Add task
 				</button>

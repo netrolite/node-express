@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-function addTask(newTaskRef, tasks, setTasks) {
+function addTask(newTaskRef, setTasks) {
     (async () => {
         try {
 
@@ -34,7 +34,6 @@ function changeChecked(setTasks, currDone, id) {
     (async () => {
         try {
 
-            
             // reversing "checked" because "setChecked" (right above) doesn't update it at this point in code
             await axios.patch(
                 `/api/v1/tasks/${id}`,
@@ -48,6 +47,33 @@ function changeChecked(setTasks, currDone, id) {
             console.error(err);
         }
     })();
+}
+
+
+function editTask(setEditMode, taskContents) {
+    setEditMode(true);
+    // focus on task (it's contentEditable). Using timeout because when executed synchronously, div is not yet contentEditable
+    setTimeout(() => taskContents.current.focus(), 0);
+}
+
+
+function saveEdit(taskContents, setEditMode, setTaskActionsOpenID, id) {
+    (async () => {
+        try {
+
+            const newTaskName = taskContents.current.textContent;
+
+            // send new task name to the db
+            await axios.patch(`/api/v1/tasks/${id}`, {
+                name: newTaskName
+            });
+            setEditMode(false);
+            setTaskActionsOpenID(null);
+
+        } catch (err) {
+            console.error(err);
+        }
+    })();   
 }
 
 
@@ -66,8 +92,19 @@ function deleteTask(setTasks, id, setTaskActionsOpenID) {
 }
 
 
+function toggleShowActions(setTaskActionsOpenID, id) {
+    setTaskActionsOpenID(prev => {
+        if (prev === id) return null;
+        return id;
+    });
+}
+
+
 export {
     addTask,
     changeChecked,
-    deleteTask
+    editTask,
+    saveEdit,
+    deleteTask,
+    toggleShowActions
 }
