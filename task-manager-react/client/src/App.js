@@ -17,9 +17,9 @@ function App() {
 			}
 		})();
 	}, []);
+	console.log("render");
 
 	const tasksNodes = tasks.map((task, i) => {
-		console.log(task);
 		return (
 			<Task
 				name={task.name}

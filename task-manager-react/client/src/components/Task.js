@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 export default function Task({name, done, id}) {
     // "done" is not state, it's requested from the db only on page load
@@ -7,21 +7,22 @@ export default function Task({name, done, id}) {
     const [checked, setChecked] = useState(done);
 
 
-    useEffect(() => {
+    function changeChecked() {
         (async () => {
             try {
+                setChecked(prev => !prev);
 
+                // reversing "checked" because "setChecked" (right above) doesn't update it at this point in code
                 const response = await axios.patch(
                     `/api/v1/tasks/${id}`,
-                    { done: checked }
+                    { done: !checked }
                 );
-                console.log(response);
-
             } catch (err) {
                 console.error(err);
             }
         })();
-    }, [checked]);
+    }
+    
 
 
     return (
@@ -30,7 +31,7 @@ export default function Task({name, done, id}) {
                 <input
                     type="checkbox"
                     checked={checked}
-                    onChange={() => setChecked(prevState => !prevState)}
+                    onChange={changeChecked}
                 />
             </div>
             <div className="task-name">{name}</div>
