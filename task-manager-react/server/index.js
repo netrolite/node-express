@@ -13,7 +13,7 @@ app.use(express.json());
 app.use("/api/v1/tasks", tasksRoute);
 
 app.get('/', (req, res) => {
-    res.sendStatus(200);
+    res.status(200);
     res.end();
 });
 
