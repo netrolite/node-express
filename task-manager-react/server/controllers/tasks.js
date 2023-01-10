@@ -48,7 +48,6 @@ async function getTask(req, res) {
 async function patchTask(req, res) {
     try {
 
-        console.log("patch task");
         const { taskID } = req.params;
         const task = await Task.findOneAndUpdate(
             { _id: taskID },
@@ -72,7 +71,6 @@ async function patchTask(req, res) {
 async function deleteTask(req, res) {
     try {
 
-        console.log("delete task");
         const { taskID } = req.params;
         const task = await Task.findOneAndDelete({ _id: taskID });
 
@@ -90,7 +88,7 @@ async function deleteTask(req, res) {
 
 
 function handleErr(err, res) {
-    console.log(err);
+    console.error(err);
     res.status(500);
     res.json({ err });
 }
