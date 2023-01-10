@@ -7,6 +7,9 @@ const connectDB = require("./db/connect");
 const tasksRoute = require("./routes/tasks");
 
 // middleware
+app.use(cors({
+    origin: "https://task-manager-p1gn.onrender.com/"
+}))
 app.use(express.json());
 
 // routes
