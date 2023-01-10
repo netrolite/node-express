@@ -12,6 +12,12 @@ app.use(express.json());
 // routes
 app.use("/api/v1/tasks", tasksRoute);
 
+app.get('/', (req, res) => {
+    res.sendStatus(200);
+    res.end();
+});
+
+
 (async () => {
     try {
         // use VPN!!!
