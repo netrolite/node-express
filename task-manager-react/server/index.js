@@ -8,7 +8,7 @@ const tasksRoute = require("./routes/tasks");
 
 // middleware
 app.use(cors({
-    origin: "https://task-manager-p1gn.onrender.com/"
+    origin: "https://task-manager-p1gn.onrender.com"
 }))
 app.use(express.json());
 
