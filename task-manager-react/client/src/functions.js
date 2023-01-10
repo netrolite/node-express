@@ -1,6 +1,18 @@
 import axios from "axios";
 
 
+async function getAllTasks(setTasks) {
+    try {
+
+        const response = await axios.get("/api/v1/tasks");
+        setTasks(response.data);
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
 function addTask(newTaskRef, setTasks) {
     (async () => {
         try {
@@ -101,6 +113,7 @@ function toggleShowActions(setTaskActionsOpenID, id) {
 
 
 export {
+    getAllTasks,
     addTask,
     changeChecked,
     editTask,

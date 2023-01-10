@@ -1,7 +1,5 @@
-import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css"
 import { useState, useEffect, useRef } from "react";
-import { addTask } from "./functions";
+import { getAllTasks, addTask } from "./functions";
 import Task from "./components/Task";
 
 function App() {
@@ -12,16 +10,7 @@ function App() {
 
 
 	useEffect(() => {
-		(async () => {
-			try {
-
-				const response = await axios.get("/api/v1/tasks");
-				setTasks(response.data);
-
-			} catch (err) {
-				console.error(err);
-			}
-		})();
+		getAllTasks(setTasks);
 	}, []);
 
 
