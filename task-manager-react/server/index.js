@@ -15,20 +15,35 @@ app.use(cors({
 app.use(express.json());
 
 
+// middlware. Middleware is any function that has access to "req" and "res" object and "next" function
+// this one clearly does
+app.get("/test", (req, res, next) => {
+    console.log("test 1");
+    next();
+})
+
+// middlware
+app.get("/test", (req, res, next) => {
+    console.log("test 2");
+    res.send("my second response");
+    // express' built-in middleware catches the error and the server doesn't crash but sends a 500 response
+    throw new SyntaxError("BROKEN");
+})
 
 
-
-// routes
+// routes (middleware)
 app.use("/api/v1/tasks", tasksRoute);
 
 
+// this is also middleware
 app.get('/', (req, res) => {
     res.status(200).end();
-}); // <-- this semicolon is required before IIFE func
+});
 
 
+// this is again middleware
 // 404 not found (must go after all other routes)
-app.use(notFound);
+app.use(notFound); // <-- this semicolon is required before IIFE
 
 
 (async () => {

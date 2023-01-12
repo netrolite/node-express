@@ -1,16 +1,12 @@
 const Task = require("../models/Task");
+// async wrapper to eliminate trycatch blocks everywhere
+const wrapper = require("../middleware/asyncWrapper");
 
 
-async function getAllTasks(req, res) {
-    try {
-
-        const tasks = await Task.find({});
-        res.status(200).json(tasks);
-
-    } catch (err) {
-        handleErr(err, res);
-    }
-}
+const getAllTasks = wrapper(async (req, res) => {
+    const tasks = await Task.find({});
+    res.status(200).json(tasks);
+})
 
 
 async function postTask(req, res) {
