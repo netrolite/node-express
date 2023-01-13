@@ -1,3 +1,4 @@
+const fs = require("fs");
 const express = require("express");
 const app = express();
 const port = 5000;
@@ -8,6 +9,8 @@ const tasksRoute = require("./routes/tasks");
 const notFound = require("./middleware/notFound");
 
 
+// Middleware is any function that has access to "req" and "res" object and "next" function
+
 // middleware
 app.use(cors({
     origin: "https://task-manager-p1gn.onrender.com"
@@ -15,34 +18,18 @@ app.use(cors({
 app.use(express.json());
 
 
-// middlware. Middleware is any function that has access to "req" and "res" object and "next" function
-// this one clearly does
-app.get("/test", (req, res, next) => {
-    console.log("test 1");
-    next();
-})
-
-// middlware
-app.get("/test", (req, res, next) => {
-    console.log("test 2");
-    res.send("my second response");
-    // express' built-in middleware catches the error and the server doesn't crash but sends a 500 response
-    throw new SyntaxError("BROKEN");
-})
-
-
 // routes (middleware)
 app.use("/api/v1/tasks", tasksRoute);
 
 
-// this is also middleware
+// render hosting needs the root request to be complete (when end() is called)
 app.get('/', (req, res) => {
     res.status(200).end();
 });
 
 
-// this is again middleware
 // 404 not found (must go after all other routes)
+// middleware
 app.use(notFound); // <-- this semicolon is required before IIFE
 
 
