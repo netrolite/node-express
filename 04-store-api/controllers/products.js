@@ -1,7 +1,10 @@
 const Product = require("../models/Product");
 
 async function getAllProductsTesting(req ,res) {
-    const products = await Product.find(req.query);
+    const query = "q";
+    const products = await Product.find({
+        name: { $regex: query }
+    })
     res.status(200).json({ resultsAmount: products.length, products });
 }
 

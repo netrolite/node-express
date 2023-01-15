@@ -28,9 +28,13 @@ app.use(errHandler);
 // connect DB & start listening
 (async () => {
     try {
+        console.time("Time elapsed");
+
         await connectDB(mongoURI);
         app.listen(port);
         console.log(`DB connected. Port ${port}`);
+        
+        console.timeEnd("Time elapsed");
     } catch (err) {
         console.log(err);
     }
