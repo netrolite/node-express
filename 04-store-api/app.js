@@ -2,18 +2,16 @@ const express = require("express");
 const app = express();
 // avoid the need for trycatch blocks (also throw errors instead of calling next())
 require("express-async-errors");
-// env variables
 require("dotenv").config();
 const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT;
-// DB
-const mongoose = require("mongoose");
 const connectDB = require("./db/connectDB");
 // middleware
 const notFound = require("./middleware/notFound");
 const errHandler = require("./middleware/errHandler");
 // routes
 const productsRoute = require("./routes/products");
+const testingRoute = require("./routes/testing");
 
 
 // middleware
@@ -21,6 +19,7 @@ app.use(express.json());
 
 // routes
 app.use("/api/products", productsRoute);
+app.use("/api/testing", testingRoute);
 
 // not found & error resonses
 app.use(notFound);
