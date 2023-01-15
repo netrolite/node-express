@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+// avoid the need for trycatch blocks (also throw errors instead of calling next())
+require("express-async-errors");
 // env variables
 require("dotenv").config();
 const mongoURI = process.env.MONGO_URI;
