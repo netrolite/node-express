@@ -6,8 +6,7 @@ async function errHandler(err, req, res, next) {
         return res.json({ message: err.message });
     }
     
-	// if err is not an instance of ApiError, send a generic response
-    console.log("This is my real error");
+	// if err is not an instance of ApiError, send a 500 response
     console.log(err.message);
     return res.status(500).json({ message: err.message })
 }

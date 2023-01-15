@@ -6,3 +6,5 @@ const {
 
 router.route("/")
     .get(getAllProducts);
+
+module.exports = router;
