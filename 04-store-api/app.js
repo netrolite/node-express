@@ -11,7 +11,6 @@ const notFound = require("./middleware/notFound");
 const errHandler = require("./middleware/errHandler");
 // routes
 const productsRoute = require("./routes/products");
-const testingRoute = require("./routes/testing");
 
 
 // middleware
@@ -19,7 +18,6 @@ app.use(express.json());
 
 // routes
 app.use("/api/products", productsRoute);
-app.use("/api/testing", testingRoute);
 
 // not found & error resonses
 app.use(notFound);
