@@ -7,14 +7,18 @@ const app = express();
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
+const mainRouter = require("./routers/main");
+
 // middleware
 app.use(express.static('./public'));
 app.use(express.json());
 
+app.use("/api", mainRouter);
+
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000 ;
 
 (async () => {
   try {
