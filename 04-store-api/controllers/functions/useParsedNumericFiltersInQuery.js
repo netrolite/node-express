@@ -5,14 +5,11 @@ function useParsedNumericFiltersInQuery(query, filters) {
     const supportedFilteringFields = ["price", "rating"];
 
     filters.forEach(filter => {
-        const field = filter[0]; // price
-        const operator = filter[1]; // $gt
-        let condition = filter[2]; // 50
+        let [field, operator, condition] = filter; // ["price", ">", "50"]
 
         if (!supportedFilteringFields.includes(field)) {
             throw new ApiError(`Filtering field not supported. Supported: ${supportedFilteringFields}`, 400);
         }
-
         if (isNumeric(condition)) {
             condition = Number(condition);
         } else throw new ApiError("Conditions must be numeric", 400);
