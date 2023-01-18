@@ -1,10 +1,10 @@
-function sortItems(result, sort) {
+function sortItems(products, sort) {
     // requires syntax with spaces between each item
     if (sort) {
-        result = result.sort(sort.replaceAll(",", " "));
+        products = products.sort(sort.replaceAll(",", " "));
     }
-    else result = result.sort("createdAt");
-    return result;
+    else products = products.sort("createdAt");
+    return products;
 }
 
 module.exports = sortItems;

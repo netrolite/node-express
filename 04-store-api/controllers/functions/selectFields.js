@@ -1,10 +1,10 @@
-function selectFields(result, fields) {
+function selectFields(products, fields) {
     // select only specific fields
     // requires syntax with spaces between each item
     if (fields) {
-        result = result.select(fields.replaceAll(",", " "));
+        products = products.select(fields.replaceAll(",", " "));
     }
-    return result;
+    return products;
 }
 
 module.exports = selectFields;
