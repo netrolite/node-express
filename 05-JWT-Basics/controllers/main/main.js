@@ -5,7 +5,7 @@ const validateUserCredentials = require("./functions/validateUserCredentials");
 const ApiError = require("../../errors/ApiError");
 
 
-function login(req, res) {
+async function login(req, res) {
     const { username, password } = req.body;
     validateUserCredentials(req.body);
     console.log(password);
@@ -21,7 +21,7 @@ function login(req, res) {
 }
 
 
-function dashboard(req, res) {
+async function dashboard(req, res) {
     const authHeader = req.headers.authorization;
     const token = authHeader.split(" ")[1];
 
