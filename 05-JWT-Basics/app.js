@@ -6,6 +6,7 @@ const app = express();
 
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+const auth = require("./middleware/auth");
 
 const mainRouter = require("./routers/main");
 
@@ -13,6 +14,7 @@ const mainRouter = require("./routers/main");
 app.use(express.static('./public'));
 app.use(express.json());
 
+app.use("/api/dashboard", auth);
 app.use("/api", mainRouter);
 
 app.use(notFoundMiddleware);
