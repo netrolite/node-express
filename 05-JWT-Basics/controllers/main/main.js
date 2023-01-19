@@ -8,7 +8,6 @@ const ApiError = require("../../errors/ApiError");
 async function login(req, res) {
     const { username, password } = req.body;
     validateUserCredentials(req.body);
-    console.log(password);
 
     const id = nanoid();
     const token = jwt.sign(
@@ -22,16 +21,7 @@ async function login(req, res) {
 
 
 async function dashboard(req, res) {
-    const authHeader = req.headers.authorization;
-    const token = authHeader.split(" ")[1];
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const response = `Username: ${decoded.username} Password: ${decoded.password} ID: ${decoded.id}.`;
-        res.json({ message: response });
-    } catch (err) {
-        throw new ApiError("Not authorized", 401);
-    }
+    res.json({ message: `Username: ${req.user.username}. ID: ${req.user.id}. Password: ${req.user.password}`});
 }
 
 
