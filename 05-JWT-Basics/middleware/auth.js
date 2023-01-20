@@ -3,21 +3,19 @@ const jwt = require("jsonwebtoken");
 const ApiError = require("../errors/ApiError");
 
 function auth(req, res, next) {
-    const header = req.headers.authorization;
-    console.log(header);
-    const regex = /^Bearer(\n|\s)(\w|\.)+$/
-    if (!header || !regex.test(header)) {
+    const authHeader = req.headers.authorization;
+    const regex = /Bearer(\n|\s)(\w|\.)+/;
+    if (!authHeader || !regex.test(authHeader)) {
         throw new ApiError("Invalid authorization header", 400);
     }
 
     try {
-        const token = header.split(" ")[1];
+        const token = authHeader.split(" ")[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const { id, username, password } = decoded;
-        req.user = { id, username, password };
+        req.user = decoded;
         next();
     } catch (err) {
-        throw new ApiError("Not authorized", 401);
+        throw new ApiError("Bad token. Not authorized", 401);
     }
 }
 
