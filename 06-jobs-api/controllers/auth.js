@@ -1,9 +1,12 @@
+const User = require("../models/User");
+
+
 async function register(req ,res) {
-    res.send("register user");
+    res.json(req.body);
 }
 
 async function login(req ,res) {
-    res.send("login user");
+    res.json(req.body);
 }
 
 module.exports = {

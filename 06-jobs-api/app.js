@@ -2,6 +2,7 @@ require('dotenv').config();
 require('express-async-errors');
 const express = require('express');
 const app = express();
+const connectDB = require("./db/connectDB");
 const jobsRouter = require("./routers/jobs");
 const authRouter = require("./routers/auth");
 const NotFoundError = require('./errors/NotFoundError');
@@ -24,9 +25,9 @@ app.use(errorHandler);
 
 (async () => {
   try {
-    app.listen(port, () =>
-      console.log(`Server is listening on port ${port}...`)
-    );
+    connectDB(process.env.MONGO_URI);
+    app.listen(port);
+    console.log(`DB connected. Listening on port ${port}`);
   } catch (error) {
     console.log(error);
   }
