@@ -6,7 +6,7 @@ const {
     addJob,
     patchJob,
     deleteJob
-} = require("../controllers/jobs");
+} = require("../controllers/jobs/jobs");
 
 
 router.route("/")

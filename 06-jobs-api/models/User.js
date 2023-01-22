@@ -22,8 +22,7 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "Password is required"],
-        minlength: 8,
-        maxlength: 100
+        // min/max length isn't needed because passwords are stored as fixed-length hashes
     }
 })
 
