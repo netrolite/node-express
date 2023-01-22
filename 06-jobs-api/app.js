@@ -5,7 +5,7 @@ const app = express();
 const connectDB = require("./db/connectDB");
 const jobsRouter = require("./routers/jobs");
 const authRouter = require("./routers/auth");
-const NotFoundError = require('./errors/NotFoundError');
+const notFoundMiddleware = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
 const port = process.env.PORT || 5000;
 
@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/jobs", jobsRouter);
 
-app.use(NotFoundError);
+app.use(notFoundMiddleware);
 app.use(errorHandler);
 
 
