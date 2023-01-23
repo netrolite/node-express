@@ -15,7 +15,9 @@ async function register(req, res) {
 
 async function login(req, res) {
     res.status(200).json(req.body);
+    const { name, email, password } = req.body;
 }
+
 
 module.exports = {
     register,
