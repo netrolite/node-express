@@ -3,15 +3,10 @@ const bcrypt = require("bcryptjs");
 
 
 async function register(req, res) {
-    const { name, email, password } = req.body;
-    
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-    const userObjForDB = { name, email, password: hashedPassword };
-    
-    const user = await User.create(userObjForDB);
+    const user = await User.create(req.body);
     res.status(201).json(user);
 }
+
 
 async function login(req, res) {
     res.status(200).json(req.body);
