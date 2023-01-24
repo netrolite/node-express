@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 
-const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Name is required"],
         minlength: [3, "Min length is 3 characters"],
-        maxlength: [30, "Max length is 30 characters"],
-        unique: true
+        maxlength: [30, "Max length is 30 characters"]
     },
     email: {
         type: String,
@@ -29,8 +29,17 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.pre("save", function (next) {
     const salt = bcrypt.genSaltSync(10);
-    this.password = bcrypt.hash(this.password, salt);
+    this.password = bcrypt.hashSync(this.password, salt);
     next();
 })
+
+UserSchema.methods.createJWT = function () {
+    return jwt.sign(
+        { userId: this._id, name: this.name },
+        process.env.JWT_SECRET,
+        { expiresIn: "30d" }
+    )
+}
+
 
 module.exports = mongoose.model("User", UserSchema);
