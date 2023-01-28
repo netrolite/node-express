@@ -1,5 +1,6 @@
 const Job = require("../models/Job");
 const mongoose = require("mongoose");
+const checkIfNotFoundAndRespond = require("./functions/checkIfNotFoundAndRespond");
 
 
 async function getAllJobs(req, res) {
@@ -17,9 +18,16 @@ async function getAllJobs(req, res) {
 
 
 async function getJob(req, res) {
-    const jobId = req.params.id;
-    const job = await Job.findOne({ _id: jobId });
-    res.status(200).json(job);
+    const { id: jobId } = req.params;
+    const { userId } = req.user;
+
+    const job = await Job.findOne({
+        _id: jobId,
+        createdBy: userId
+    });
+    checkIfNotFoundAndRespond(job, res);
+
+    if (!res.headersSent) res.status(200).json(job);
 }
 
 
