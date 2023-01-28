@@ -1,13 +1,16 @@
+const Job = require("../models/Job");
+
 async function getAllJobs(req, res) {
-    res.json(req.user);
 }
 
 async function getJob(req, res) {
-    res.send("Single job");
+    res.send("Get 1 job")
 }
 
 async function addJob(req, res) {
-    res.send("Add job");
+    req.body.createdBy = req.user.userId;
+    const job = await Job.create(req.body);
+    res.status(201).json({ job });
 }
 
 async function patchJob(req, res) {

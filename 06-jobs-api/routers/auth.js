@@ -3,7 +3,7 @@ const router = express.Router();
 const {
     register,
     login
-} = require("../controllers/auth/auth");
+} = require("../controllers/auth");
 const validateLoginCredentials = require("../middleware/validateLoginCredentials");
 
 
