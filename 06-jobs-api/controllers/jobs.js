@@ -1,6 +1,14 @@
 const Job = require("../models/Job");
 
 async function getAllJobs(req, res) {
+    const { limit } = req.body;
+
+    let jobs = Job.find({});
+    if (typeof limit === "number") jobs.limit(parseInt(limit));
+    else if (limit !== "unlimited") jobs.limit(3);
+
+    jobs = await jobs;
+    res.status(200).json({ resultsAmount: jobs.length, jobs });
 }
 
 async function getJob(req, res) {
