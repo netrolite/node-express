@@ -1,5 +1,5 @@
 async function getAllJobs(req, res) {
-    res.send("All jobs");
+    res.json(req.user);
 }
 
 async function getJob(req, res) {

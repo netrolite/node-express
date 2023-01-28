@@ -10,8 +10,8 @@ const {
 
 
 router.route("/")
-    .post(addJob)
-    .get(getAllJobs);
+    .get(getAllJobs)
+    .post(addJob);
 
 router.route("/:id")
     .get(getJob)
