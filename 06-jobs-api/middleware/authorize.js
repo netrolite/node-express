@@ -11,7 +11,6 @@ function authorize(req, res, next) {
 
     const token = authHeader.split(" ")[1];
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    
     req.user = {
         userId: payload.userId,
         name: payload.name
