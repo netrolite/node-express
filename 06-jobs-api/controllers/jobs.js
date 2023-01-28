@@ -2,10 +2,12 @@ const Job = require("../models/Job");
 
 async function getAllJobs(req, res) {
     const { limit } = req.body;
+    const { userId } = req.user;
 
-    let jobs = Job.find({});
+    // only find jobs created by the current user
+    let jobs = Job.find({ createdBy: userId });
     if (typeof limit === "number") jobs.limit(parseInt(limit));
-    else if (limit !== "unlimited") jobs.limit(3);
+    else if (limit !== "unlimited") jobs.limit(5);
 
     jobs = await jobs;
     res.status(200).json({ resultsAmount: jobs.length, jobs });
