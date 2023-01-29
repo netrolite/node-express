@@ -17,9 +17,6 @@ const errorHandler = require('./middleware/errorHandler');
 const port = process.env.PORT || 5000;
 
 
-// allow reverse proxy (like Heroku, Render)
-// app.set("trust proxy", 1);
-
 app.use(express.json());
 app.use(rateLimit(rateLimiterOptions));
 app.use(cors(corsOptions));

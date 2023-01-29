@@ -9,7 +9,7 @@ async function getAllJobs(req, res) {
     // only find jobs created by the current user
     let jobs = Job.find({ createdBy: userId });
 
-    if (!limit) jobs.limit(2);
+    if (!limit) jobs.limit(5);
     else if (typeof limit === "number") jobs.limit(parseInt(limit));
     else if (limit && limit !== "unlimited") {
         throw new BadRequestError("limit must be a number or 'unlimited'");
