@@ -7,14 +7,14 @@ function errorHandler(err, req, res, next) {
     res.status(statusCode).json(errObject);
 
 
-    function handleDuplicateErr(errObject) {
+    function handleDuplicateErr() {
         statusCode = 400;
         errObject.message = "Duplicate error"
         errObject.duplicateKeys = Object.keys(keyValue);
     }
 
 
-    function handleValidationErr(errObject) {
+    function handleValidationErr() {
         statusCode = 400;
         errObject.message = "Validation error";
         const errorsArray = Object.values(err.errors);
