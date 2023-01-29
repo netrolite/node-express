@@ -1,7 +1,10 @@
 // error handlers must take 4 arguments
 function errorHandler(err, req, res, next) {
     let statusCode = err.statusCode || 500;
-    const errObject = { message: err.message };
+    const errObject = {
+        message: err.message || "Something went wrong"
+    };
+
     if (err.code === 11000) handleDuplicateErr(errObject);
     else if (err.name === "ValidationError") handleValidationErr(errObject);
     else if (err.name === "CastError" && err.kind === "ObjectId") {
@@ -13,7 +16,7 @@ function errorHandler(err, req, res, next) {
     function handleDuplicateErr() {
         statusCode = 400;
         errObject.message = "Duplicate error"
-        errObject.duplicateKeys = Object.keys(keyValue);
+        errObject.duplicateKeys = Object.keys(err.keyValue);
     }
 
 
