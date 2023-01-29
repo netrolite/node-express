@@ -1,32 +1,40 @@
-const { BadRequestError } = require("../errors");
-const ApiError = require("../errors/ApiError");
-
+// error handlers must take 4 arguments
 function errorHandler(err, req, res, next) {
-    const errObject = {
-        statusCode: err.statusCode,
-        message: err.message
+    let statusCode = err.statusCode || 500;
+    const errObject = { message: err.message };
+    if (err.code === 11000) handleDuplicateErr(errObject);
+    else if (err.name === "ValidationError") handleValidationErr(errObject);
+    res.status(statusCode).json(errObject);
+
+
+    function handleDuplicateErr(errObject) {
+        statusCode = 400;
+        errObject.message = "Duplicate error"
+        errObject.duplicateKeys = Object.keys(keyValue);
     }
 
-    console.log(errObject);
 
-    // if is a custom error like "BadRequestError" or "NotFoundError"
-    if (err instanceof ApiError) {
-        return res.status(statusCode).json({ message })
+    function handleValidationErr(errObject) {
+        statusCode = 400;
+        errObject.message = "Validation error";
+        const errorsArray = Object.values(err.errors);
+        errObject.invalid = formatValidationErrs(errorsArray);
     }
 
-    if (err.code === 11000) {
-        handleDuplicate(errObject, err.keyValue);
-        res.status(400).json(errObject);
+
+    function formatValidationErrs(errorsArray) {
+        return errorsArray.map(error => {
+            const formattedError = {};
+            formattedError.message = error.message;
+            formattedError.kind = error.kind;
+            formattedError.path = error.path;
+            if (error.kind === "enum") {
+                formattedError.possibleValues = error.properties.enumValues;
+            }
+
+            return formattedError;
+        })
     }
-
-    return res.status(500).json(errObject);
-}
-
-
-function handleDuplicate(errObject, keyValue) {
-    errObject.message = "1 or more entries already exist"
-    const duplicateKeys = Object.keys(keyValue);
-    errObject.duplicateEntries = duplicateKeys;
 }
 
 
