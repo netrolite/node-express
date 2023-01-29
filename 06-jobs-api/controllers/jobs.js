@@ -50,11 +50,22 @@ async function patchJob(req, res) {
         { runValidators: true, new: true }
     )
 
+    if (!updatedJob) throw new NotFoundError("Not found");
+
     res.status(200).json(updatedJob);
 }
 
 async function deleteJob(req, res) {
-    res.send("Delete job");
+    const { id: jobId } = req.params;
+    const { userId } = req.user;
+
+    const deletedUser = await Job.findOneAndDelete(
+        { _id: jobId, createdBy: userId }
+    )
+
+    if (!deletedUser) throw new NotFoundError("Not found");
+
+    res.status(200).json(deletedUser);
 }
 
 
