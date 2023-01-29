@@ -1,1 +1,1 @@
-Job listings fullstack app
+Job listings api (no gui)
