@@ -1,6 +1,5 @@
 const Job = require("../models/Job");
-const mongoose = require("mongoose");
-const checkIfNotFoundAndRespond = require("./functions/checkIfNotFoundAndRespond");
+const { NotFoundError } = require("../errors");
 
 
 async function getAllJobs(req, res) {
@@ -25,9 +24,10 @@ async function getJob(req, res) {
         _id: jobId,
         createdBy: userId
     });
-    checkIfNotFoundAndRespond(job, res);
 
-    if (!res.headersSent) res.status(200).json(job);
+    if (!job) throw new NotFoundError("Not found");
+
+    res.status(200).json(job);
 }
 
 
@@ -39,7 +39,18 @@ async function addJob(req, res) {
 
 
 async function patchJob(req, res) {
-    res.send("Update job");
+    const { id: jobId } = req.params;
+    const { userId } = req.user;
+
+    // findOneAndUpdate returns the updated document
+    // updateOne only updates the document without returning it
+    const updatedJob = await Job.findOneAndUpdate(
+        { _id: jobId, createdBy: userId },
+        req.body,
+        { runValidators: true, new: true }
+    )
+
+    res.status(200).json(updatedJob);
 }
 
 async function deleteJob(req, res) {
