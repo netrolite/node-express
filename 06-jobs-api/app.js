@@ -23,9 +23,7 @@ app.use(cors(corsOptions));
 
 
 // routes
-app.get('/', (req, res) => {
-  res.status(200).send('jobs api');
-});
+app.get('/', (req, res) => res.status(200).end());
 app.use("/api/auth", authRouter);
 app.use("/api/jobs", authorize, jobsRouter);
 
