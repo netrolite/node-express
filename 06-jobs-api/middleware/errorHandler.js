@@ -4,6 +4,9 @@ function errorHandler(err, req, res, next) {
     const errObject = { message: err.message };
     if (err.code === 11000) handleDuplicateErr(errObject);
     else if (err.name === "ValidationError") handleValidationErr(errObject);
+    else if (err.name === "CastError" && err.kind === "ObjectId") {
+        handleObjectIdCastErr()
+    }
     res.status(statusCode).json(errObject);
 
 
@@ -34,6 +37,12 @@ function errorHandler(err, req, res, next) {
 
             return formattedError;
         })
+    }
+
+
+    function handleObjectIdCastErr() {
+        statusCode = 400;
+        errObject.message = "ObjectId must be a 24 character string";
     }
 }
 
