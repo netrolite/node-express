@@ -1,5 +1,11 @@
 require('dotenv').config();
 require('express-async-errors');
+const helmet = require("helmet");
+const cors = require("cors");
+const corsOptions = require("./config/corsOptions");
+const xss = require("xss-clean");
+const rateLimit = require("express-rate-limit");
+const rateLimiterOptions = require("./config/rateLimiterOptions");
 const express = require('express');
 const app = express();
 const connectDB = require("./db/connectDB");
@@ -10,8 +16,14 @@ const notFound = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
 const port = process.env.PORT || 5000;
 
- 
+
+// allow reverse proxy (like Heroku, Render)
+app.set("trust proxy", 1);
+
 app.use(express.json());
+app.use(rateLimit(rateLimiterOptions));
+app.use(cors(corsOptions));
+
 
 // routes
 app.get('/', (req, res) => {
