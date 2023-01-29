@@ -1,5 +1,5 @@
 const Job = require("../models/Job");
-const { NotFoundError } = require("../errors");
+const { NotFoundError, BadRequestError } = require("../errors");
 
 
 async function getAllJobs(req, res) {
@@ -8,8 +8,12 @@ async function getAllJobs(req, res) {
 
     // only find jobs created by the current user
     let jobs = Job.find({ createdBy: userId });
-    if (typeof limit === "number") jobs.limit(parseInt(limit));
-    else if (limit !== "unlimited") jobs.limit(5);
+
+    if (!limit) jobs.limit(2);
+    else if (typeof limit === "number") jobs.limit(parseInt(limit));
+    else if (limit && limit !== "unlimited") {
+        throw new BadRequestError("limit must be a number or 'unlimited'");
+    }
 
     jobs = await jobs;
     res.status(200).json({ amount: jobs.length, jobs });
@@ -54,6 +58,7 @@ async function patchJob(req, res) {
 
     res.status(200).json(updatedJob);
 }
+
 
 async function deleteJob(req, res) {
     const { id: jobId } = req.params;
